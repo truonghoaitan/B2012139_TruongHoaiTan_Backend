@@ -13,7 +13,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
     res.json({ massage: "Welcome to contact book application." });
 });
-app.use("/api/contacts", contactsRouter);
+// app.use("/api/contacts", contactsRouter);
 
 // // handle 404 response
 // app.use((req, res, next) => {
