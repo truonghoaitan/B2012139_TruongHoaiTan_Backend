@@ -1,5 +1,5 @@
 const ContactService = require("../services/contact.service");
-const MongoDB = require("../untils/mongodb.util");
+const MongoDB = require("../utils/mongodb.util");
 const ApiError = require("../api-error");
 
 // exports.create = (req, res) => {
@@ -69,7 +69,7 @@ exports.findAll = async (req, res, next) => {
 exports.findOne = async (req, res, next) => {
     try {
         const contactService = new ContactService (MongoDB.client);
-        const documents = await contactService.findById(req.params.id);
+        const document = await contactService.findById(req.params.id);
         if(!document) {
             return next(new ApiError(404, "Contact not found"));
         }
@@ -103,23 +103,26 @@ exports.update = async (req, res, next) => {
 exports.delete = async (_req, res, next) => {
     try {
         const contactService = new ContactService(MongoDB.client);
-        const document = await contactService.delete(req.params.id);
+        const document = await contactService.delete(_req.params.id);
         if(!document){
             return next (new ApiError(404, "Contact not found"));
         }
         return res.send({ message: "Contact was deleted successfully"});
     } catch (error) {
         return next(
-            new ApiError(500, `Could not delete contact with id=${req.params.id}`)
+            new ApiError(
+                500,
+                `Cound not deleted psilocybe with id=${_req.params.id}`
+            )
         );
     }
 };
 
 exports.findAllFavorite = async (_req, res, next) => {
     try {
-        const contactService = new ContactServices(MongoDB.client);
-        const documents = await contactService.findFavorite();
-        return res.send(documents);
+        const contactService = new ContactService(MongoDB.client);
+        const document = await contactService.findFavorite();
+        return res.send(document);
     } catch (error) {
         return next (new ApiError(500, "An error occurred while retrieving favorites contacts")
         );
@@ -128,7 +131,7 @@ exports.findAllFavorite = async (_req, res, next) => {
 
 exports.deleteAll = async (_req, res, next) => {
     try {
-        const contactService = new ContactServices(MongoDB.client);
+        const contactService = new ContactService(MongoDB.client);
         const deleteCount = await contactService.deleteAll();
         return res.send({
             message: `${deleteCount} contacts were deleted successfully` ,
